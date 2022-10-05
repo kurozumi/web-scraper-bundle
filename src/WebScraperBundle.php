@@ -28,7 +28,7 @@ class WebScraperBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Resources/config'));
+        $loader = new YamlFileLoader($builder, new FileLocator(__DIR__ . '/Resources/config'));
         $loader->load('services.yaml');
     }
 }
