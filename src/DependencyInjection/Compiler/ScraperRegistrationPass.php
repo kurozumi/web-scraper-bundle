@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ScraperPass implements CompilerPassInterface
+class ScraperRegistrationPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
