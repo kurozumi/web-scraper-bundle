@@ -5,7 +5,7 @@ namespace Kurozumi\WebScraperBundle\Service\Scraper;
 use Kurozumi\WebScraperBundle\Service\ScraperInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class Rss implements ScraperInterface
+class RssScraper implements ScraperInterface
 {
     /**
      * @param string $url
