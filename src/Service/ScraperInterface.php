@@ -1,6 +1,6 @@
 <?php
 
-namespace Kurozumi\WebCrawlerBundle\Service;
+namespace Kurozumi\WebScraperBundle\Service;
 
 interface ScraperInterface
 {

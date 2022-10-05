@@ -1,0 +1,4 @@
+services:
+  kurozumi.scraper.rss:
+    class: Kurozumi\WebScraperBundle\Service\Scraper\Rss
+    tags: { name: kurozumi.web_scraper }
