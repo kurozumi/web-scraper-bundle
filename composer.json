@@ -1,0 +1,25 @@
+{
+    "name": "kurozumi/web-scraper-bundle",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=8.1",
+        "symfony/css-selector": "^6.1",
+        "symfony/dom-crawler": "^6.1",
+        "symfony/framework-bundle": "^6.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kurozumi\\WebScraperBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "kurozumi",
+            "email": "info@a-zumi.net"
+        }
+    ]
+}
