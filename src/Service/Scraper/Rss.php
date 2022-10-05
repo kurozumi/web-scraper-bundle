@@ -22,7 +22,10 @@ class Rss implements ScraperInterface
         $crawler = new Crawler($data);
         if ('rss' === $crawler->nodeName()) {
             foreach ($crawler->filter('item') as $item) {
-                $items->append(new Crawler($item));
+                $items->append([
+                    'scraper_name' => get_class($this),
+                    'crawler' => new Crawler($item)
+                ]);
             }
         }
 
