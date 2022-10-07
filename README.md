@@ -39,16 +39,16 @@ class ScraperCommand extends Command
             'https://bbb.rss.xml'
         ];
         
-        $data = [];
+        $items = [];
         foreach ($feeds as $feed) {
-            $items = $this->content->getItems($feed);
-            if ($items->count() > 0) {
-                foreach ($items as $item) {
-                    switch ($item['scraper_name']) {
+            $data = $this->content->getData($feed);
+            if (null !== $data && $data['items']->count() > 0) {
+                foreach ($data['items'] as $item) {
+                    switch ($data['name']) {
                         case RssScraper::class:
-                            $data[] = [
-                                'title' => $item['crawler']->filter('title')->text(),
-                                'url' => $item['crawler']->filter('link')->text()
+                            $items[] = [
+                                'title' => $item->filter('title')->text(),
+                                'url' => $item->filter('link')->text()
                             ];
                             break;
                     }
@@ -56,7 +56,7 @@ class ScraperCommand extends Command
             }
         }
         
-        print_r($data);
+        print_r($items);
     
         return Command::SUCCESS;
     }
@@ -91,13 +91,13 @@ class YouTubeFeedScraper implements ScraperInterface
 
     /**
      * @param string $url
-     * @return \ArrayIterator
+     * @return array
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getItems(string $url): \ArrayIterator
+    public function getData(string $url): array
     {
         $response = $this->client->request('GET', $url);
 
@@ -106,14 +106,14 @@ class YouTubeFeedScraper implements ScraperInterface
         if ('feed' === $crawler->nodeName()) {
             $crawler->setDefaultNamespacePrefix('m', 'http://search.yahoo.com/mrss/');
             foreach ($crawler->filter('m|entry') as $item) {
-                $items->append([
-                    'scraper_name' => get_class($this),
-                    'crawler' => new Crawler($item)
-                ]);
+                $items->append(new Crawler($item));
             }
         }
 
-        return $items;
+        return [
+            'name' => get_class($this),
+            'items' => $items
+        ];
     }
 }
 ```
@@ -143,13 +143,13 @@ class HtmlScraper implements ScraperInterface
 
     /**
      * @param string $url
-     * @return \ArrayIterator
+     * @return array
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getItems(string $url): \ArrayIterator
+    public function getData(string $url): array
     {
         $response = $this->client->request('GET', $url);
 
@@ -157,13 +157,14 @@ class HtmlScraper implements ScraperInterface
         $crawler = new Crawler($response->getContent());
         if ('html' === $crawler->nodeName()) {
             foreach ($crawler->filter('ul > li') as $item) {
-                $items->append([
-                    'scraper_name' => get_class($this),
-                    'crawler' => new Crawler($item)
-                ]);
+                $items->append(new Crawler($item));
             }
         }
-        return $items;
+        
+        return [
+            'name' => get_class($this),
+            'items' => $items
+        ];
     }
 }
 ```

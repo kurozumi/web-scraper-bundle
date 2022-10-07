@@ -26,7 +26,7 @@ class RssScraper implements ScraperInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getItems(string $url): \ArrayIterator
+    public function getData(string $url): array
     {
         $response = $this->client->request('GET', $url);
 
@@ -34,10 +34,13 @@ class RssScraper implements ScraperInterface
         $crawler = new Crawler($response->getContent());
         if ('rss' === $crawler->nodeName()) {
             foreach ($crawler->filter('item') as $item) {
-                $items[get_class($this)] = new Crawler($item);
+                $items->append(new Crawler($item));
             }
         }
 
-        return $items;
+        return [
+            'name' => get_class($this),
+            'items' => $items
+        ];
     }
 }
