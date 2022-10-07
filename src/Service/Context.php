@@ -23,9 +23,12 @@ class Context
     {
         /** @var ScraperInterface $scraper */
         foreach ($this->scrapers as $scraper) {
-            $data = $scraper->getData($url);
-            if ($data['items']->count() > 0) {
-                return $data;
+            $items = $scraper->getItems($url);
+            if ($items->count() > 0) {
+                return [
+                    'name' => get_class($scraper),
+                    'items' => $items
+                ];
             }
         }
 
