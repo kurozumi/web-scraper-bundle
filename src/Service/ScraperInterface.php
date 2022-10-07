@@ -6,7 +6,7 @@ interface ScraperInterface
 {
     /**
      * @param string $url
-     * @return \ArrayIterator
+     * @return array
      */
-    public function getItems(string $url): \ArrayIterator;
+    public function getData(string $url): array;
 }

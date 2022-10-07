@@ -1,3 +1,5 @@
 services:
   Kurozumi\WebScraperBundle\Service\Scraper\RssScraper:
+    arguments:
+      - '@http_client'
     tags: { name: kurozumi.web_scraper }

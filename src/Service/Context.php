@@ -17,18 +17,18 @@ class Context
 
     /**
      * @param string $url
-     * @return \ArrayIterator
+     * @return array|null
      */
-    public function getItems(string $url): \ArrayIterator
+    public function getData(string $url): ?array
     {
         /** @var ScraperInterface $scraper */
         foreach ($this->scrapers as $scraper) {
-            $items = $scraper->getItems($url);
-            if ($items->count() > 0) {
-                return $items;
+            $data = $scraper->getData($url);
+            if ($data['items']->count() > 0) {
+                return $data;
             }
         }
 
-        return new \ArrayIterator();
+        return null;
     }
 }
