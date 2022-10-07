@@ -34,10 +34,7 @@ class RssScraper implements ScraperInterface
         $crawler = new Crawler($response->getContent());
         if ('rss' === $crawler->nodeName()) {
             foreach ($crawler->filter('item') as $item) {
-                $items->append([
-                    'scraper_name' => get_class($this),
-                    'crawler' => new Crawler($item)
-                ]);
+                $items[get_class($this)] = new Crawler($item);
             }
         }
 
