@@ -91,13 +91,13 @@ class YouTubeFeedScraper implements ScraperInterface
 
     /**
      * @param string $url
-     * @return array
+     * @return \ArrayIterator
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getData(string $url): array
+    public function getItems(string $url): \ArrayIterator
     {
         $response = $this->client->request('GET', $url);
 
@@ -110,10 +110,7 @@ class YouTubeFeedScraper implements ScraperInterface
             }
         }
 
-        return [
-            'name' => get_class($this),
-            'items' => $items
-        ];
+        return $items;
     }
 }
 ```
@@ -143,13 +140,13 @@ class HtmlScraper implements ScraperInterface
 
     /**
      * @param string $url
-     * @return array
+     * @return \ArrayIterator
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getData(string $url): array
+    public function getItems(string $url): \ArrayIterator
     {
         $response = $this->client->request('GET', $url);
 
@@ -161,10 +158,7 @@ class HtmlScraper implements ScraperInterface
             }
         }
         
-        return [
-            'name' => get_class($this),
-            'items' => $items
-        ];
+        return $items;
     }
 }
 ```
