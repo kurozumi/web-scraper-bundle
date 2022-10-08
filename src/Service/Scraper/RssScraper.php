@@ -2,22 +2,8 @@
 
 namespace Kurozumi\WebScraperBundle\Service\Scraper;
 
-use Kurozumi\WebScraperBundle\Service\ScraperInterface;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-class RssScraper implements ScraperInterface
+final class RssScraper extends AbstractScraper
 {
-    private HttpClientInterface $client;
-
-    /**
-     * @param HttpClientInterface $client
-     */
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * @param string $url
      * @return \ArrayIterator
@@ -28,13 +14,13 @@ class RssScraper implements ScraperInterface
      */
     public function getItems(string $url): \ArrayIterator
     {
-        $response = $this->client->request('GET', $url);
+        $response = $this->getResponse($url);
 
         $items = new \ArrayIterator();
-        $crawler = new Crawler($response->getContent());
+        $crawler = $this->getCrawler($response);
         if ('rss' === $crawler->nodeName()) {
             foreach ($crawler->filter('item') as $item) {
-                $items->append(new Crawler($item));
+                $items->append($this->getItem($item));
             }
         }
 
