@@ -73,22 +73,8 @@ class ScraperCommand extends Command
 
 namespace App\Service\Scraper;
 
-use Kurozumi\WebScraperBundle\Service\ScraperInterface;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-class YouTubeFeedScraper implements ScraperInterface
+final class YouTubeFeedScraper extends AbstractScraper
 {
-    private HttpClientInterface $client;
-
-    /**
-     * @param HttpClientInterface $client
-     */
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * @param string $url
      * @return \ArrayIterator
@@ -99,14 +85,14 @@ class YouTubeFeedScraper implements ScraperInterface
      */
     public function getItems(string $url): \ArrayIterator
     {
-        $response = $this->client->request('GET', $url);
+        $response = $this->getResponse($url);
 
         $items = new \ArrayIterator();
-        $crawler = new Crawler($response->getContent());
+        $crawler = $this->getCrawler($response);
         if ('feed' === $crawler->nodeName()) {
             $crawler->setDefaultNamespacePrefix('m', 'http://search.yahoo.com/mrss/');
             foreach ($crawler->filter('m|entry') as $item) {
-                $items->append(new Crawler($item));
+                $items->append($this->getItem($item));
             }
         }
 
@@ -122,22 +108,8 @@ class YouTubeFeedScraper implements ScraperInterface
 
 namespace App\Service\Scraper;
 
-use Kurozumi\WebScraperBundle\Service\ScraperInterface;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-class HtmlScraper implements ScraperInterface
+final class HtmlScraper extends AbstractScraper
 {
-    private HttpClientInterface $client;
-
-    /**
-     * @param HttpClientInterface $client
-     */
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * @param string $url
      * @return \ArrayIterator
@@ -148,13 +120,13 @@ class HtmlScraper implements ScraperInterface
      */
     public function getItems(string $url): \ArrayIterator
     {
-        $response = $this->client->request('GET', $url);
+        $response = $this->getResponse($url);
 
         $items = new \ArrayIterator();
-        $crawler = new Crawler($response->getContent());
+        $crawler = $this->getCrawler($response);
         if ('html' === $crawler->nodeName()) {
             foreach ($crawler->filter('ul > li') as $item) {
-                $items->append(new Crawler($item));
+                $items->append($this->getItem($item));
             }
         }
         
