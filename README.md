@@ -42,7 +42,7 @@ class ScraperCommand extends Command
         $items = [];
         foreach ($feeds as $feed) {
             $data = $this->content->getData($feed);
-            if (null !== $data && $data['items']->count() > 0) {
+            if (null !== $data) {
                 foreach ($data['items'] as $item) {
                     switch ($data['name']) {
                         case RssScraper::class:
